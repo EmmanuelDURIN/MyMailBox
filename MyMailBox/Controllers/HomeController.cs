@@ -20,7 +20,10 @@ namespace MyMailBox.Controllers
       ViewBag.Date = DateTime.Now;
       return View();
     }
-
+    public IActionResult BadHttp()
+    {
+      return StatusCode(400);
+    }
     public IActionResult Privacy()
     {
       return View();

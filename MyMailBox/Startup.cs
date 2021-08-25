@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -45,7 +46,7 @@ namespace MyMailBox
         app.UseHsts();
       }
       app.UseHttpsRedirection();
-      app.UseStatusCodePages();
+      app.UseStatusCodePagesWithRedirects("~/errors/error{0}.html");
       app.UseStaticFiles();
 
       app.UseRouting();
