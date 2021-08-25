@@ -49,6 +49,11 @@ namespace MyMailBox
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllerRoute(
+            name: "discount",
+            pattern: "boites-aux-lettres/{reference}",
+            defaults: new { controller = "MailBox", action = "Index" }
+            );
+        endpoints.MapControllerRoute(
                   name: "default",
                   pattern: "{controller=Home}/{action=Index}/{id?}");
       });

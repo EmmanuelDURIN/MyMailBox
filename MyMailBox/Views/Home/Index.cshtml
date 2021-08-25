@@ -13,5 +13,8 @@
     {
         <div>Bonjour</div>
     }
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @*lien sans nommage de route*@
+    @*<a asp-controller="MailBox" asp-action="Index" asp-route-reference="X624">X624</a>*@
+    @*lien avec nommage de route*@
+    <a asp-route="discount" asp-route-reference="X624">X624</a>
 </div>

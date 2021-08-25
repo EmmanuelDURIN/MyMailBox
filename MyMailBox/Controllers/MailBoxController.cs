@@ -16,7 +16,7 @@ namespace MyMailBox.Controllers
         Depth = 200,
         Width = 200,
         Height = 200,
-        ImagePath = "images/mailboxes/mailbox1.jpg",
+        ImagePath = "/images/mailboxes/mailbox1.jpg",
         Name = "Ideal mailbox",
       };
       return View(model: mailbox);
