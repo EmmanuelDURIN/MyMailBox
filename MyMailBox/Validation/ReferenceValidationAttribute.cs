@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Metrics;
 
 namespace MyMailBox.Validation
 {
-  public class ReferenceValidationAttribute : ValidationAttribute
+  public class ReferenceValidationAttribute : ValidationAttribute, IClientModelValidator
   {
     public char Letter { get; set; }
 
@@ -22,6 +25,17 @@ namespace MyMailBox.Validation
         }
       }
       return ValidationResult.Success;
+    }
+    public void AddValidation(ClientModelValidationContext context)
+    {
+      if (context == null)
+      {
+        throw new ArgumentNullException(nameof(context));
+      }
+
+      context.Attributes["data-val"]= "true";
+      context.Attributes["data-val-mailboxreference"] = "Invalid reference";
+      context.Attributes["data-val-mailboxreference-letter"] = Letter.ToString();
     }
   }
 }
