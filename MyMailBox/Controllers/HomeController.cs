@@ -2,10 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MyMailBox.Models;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MyMailBox.Controllers
 {
@@ -20,6 +17,7 @@ namespace MyMailBox.Controllers
 
     public IActionResult Index()
     {
+      ViewBag.Date = DateTime.Now;
       return View();
     }
 

@@ -1,8 +1,17 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var date = ViewBag.Date;
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
+    @if (date.Hour > 16)
+    {
+        <div>Bonsoir</div>
+    }
+    else
+    {
+        <div>Bonjour</div>
+    }
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
