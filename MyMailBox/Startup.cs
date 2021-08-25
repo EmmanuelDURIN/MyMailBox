@@ -46,7 +46,7 @@ namespace MyMailBox
         app.UseHsts();
       }
       app.UseHttpsRedirection();
-      app.UseStatusCodePagesWithRedirects("~/errors/error{0}.html");
+      app.UseStatusCodePagesWithRedirects("~/errors/error-{0}");
       app.UseStaticFiles();
 
       app.UseRouting();
@@ -55,6 +55,12 @@ namespace MyMailBox
 
       app.UseEndpoints(endpoints =>
       {
+        endpoints.MapControllerRoute(
+                    name: "ErrorRoute",
+                    pattern: "errors/error-{status}",
+                    defaults: new { controller = "Home", action = "CustomError" },
+                    constraints: new { status = "\\d+" }
+                    );
         endpoints.MapControllerRoute(
             name: "discount",
             pattern: "boites-aux-lettres/{reference}",

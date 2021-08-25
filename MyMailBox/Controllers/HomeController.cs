@@ -24,6 +24,11 @@ namespace MyMailBox.Controllers
     {
       return StatusCode(400);
     }
+    public IActionResult CustomError(int status)
+    {
+      return View(status);
+    }
+
     public IActionResult Privacy()
     {
       return View();
