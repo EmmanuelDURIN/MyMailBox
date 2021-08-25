@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyMailBox.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyMailBox.Models
 {
@@ -7,6 +8,7 @@ namespace MyMailBox.Models
     public int Id { get; set; }
     [Required]
     [StringLength(10)]
+    [ReferenceValidation(Letter='X')]
     public string Reference { get; set; }
     [Required]
     [StringLength(30)] 
