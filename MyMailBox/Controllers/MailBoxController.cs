@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyMailBox.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,6 +52,7 @@ namespace MyMailBox.Controllers
     // GET: MailBox/Create
     public IActionResult Create()
     {
+      ProvideColorList();
       return View();
     }
 
@@ -58,7 +61,7 @@ namespace MyMailBox.Controllers
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Reference,Name,Color,Height,Width,Depth,ImagePath")] MailBox mailBox)
+    public async Task<IActionResult> Create([Bind("Id,Reference,Name,ColorId,Height,Width,Depth,ImagePath")] MailBox mailBox)
     {
       if (ModelState.IsValid)
       {
@@ -66,6 +69,7 @@ namespace MyMailBox.Controllers
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
       }
+      ProvideColorList();
       return View(mailBox);
     }
 
@@ -77,11 +81,12 @@ namespace MyMailBox.Controllers
         return NotFound();
       }
 
-      var mailBox = await _context.MailBoxes.SingleOrDefaultAsync(m => m.Id == id);
+      var mailBox = await _context.MailBoxes.Include( m => m.Color).SingleOrDefaultAsync(m => m.Id == id);
       if (mailBox == null)
       {
         return NotFound();
       }
+      ProvideColorList();
       return View(mailBox);
     }
 
@@ -90,7 +95,7 @@ namespace MyMailBox.Controllers
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,Reference,Name,Color,Height,Width,Depth,ImagePath")] MailBox mailBox)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Reference,Name,ColorId,Height,Width,Depth,ImagePath")] MailBox mailBox)
     {
       if (id != mailBox.Id)
       {
@@ -117,6 +122,7 @@ namespace MyMailBox.Controllers
         }
         return RedirectToAction(nameof(Index));
       }
+      ProvideColorList();
       return View(mailBox);
     }
 
@@ -129,6 +135,7 @@ namespace MyMailBox.Controllers
       }
 
       var mailBox = await _context.MailBoxes
+          .Include(m => m.Color)
           .SingleOrDefaultAsync(m => m.Id == id);
       if (mailBox == null)
       {
@@ -152,6 +159,21 @@ namespace MyMailBox.Controllers
     private bool MailBoxExists(int id)
     {
       return _context.MailBoxes.Any(e => e.Id == id);
+    }
+
+    private void ProvideColorList()
+    {
+      List<SelectListItem> colors = _context.Colors
+                                            .Select
+                                              (
+                                                 c => new SelectListItem
+                                                 {
+                                                   Value = c.Id.ToString(),
+                                                   Text = c.Name
+                                                 }
+                                              )
+                                            .ToList();
+      ViewBag.Colors = colors;
     }
   }
 }
