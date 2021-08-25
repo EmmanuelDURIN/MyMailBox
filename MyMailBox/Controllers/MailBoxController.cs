@@ -1,28 +1,157 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyMailBox.Models;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyMailBox.Controllers
 {
   public class MailBoxController : Controller
   {
-    private readonly MailBoxContext context;
+    private readonly MailBoxContext _context;
 
     public MailBoxController(MailBoxContext context)
     {
-      this.context = context;
+      _context = context;
     }
-    public IActionResult Index(String reference)
+
+    // GET: MailBox
+    public async Task<IActionResult> Index()
     {
-      if (reference == null)
-        return BadRequest("reference required");
-      MailBox mailBox = null;
-      mailBox = context.MailBoxes.FirstOrDefault(
-             mb => mb.Reference.ToUpper() == reference.ToUpper());
+      return View(await _context.MailBoxes.ToListAsync());
+    }
+    // GET: boites-aux-lettres/{reference}
+    public IActionResult DetailsByReference(String reference)
+    {
+      MailBox mailbox = _context.MailBoxes.FirstOrDefault(mb => mb.Reference == reference);
+      if (mailbox == null)
+        return NotFound("Mailbox not found");
+      return View(viewName: "Details", model: mailbox);
+    }
+    // GET: MailBox/Details/5
+    public async Task<IActionResult> Details(int? id)
+    {
+      if (id == null)
+      {
+        return NotFound();
+      }
+
+      var mailBox = await _context.MailBoxes
+          .SingleOrDefaultAsync(m => m.Id == id);
       if (mailBox == null)
-        return NotFound($"mailbox with refrence {reference} not found");
+      {
+        return NotFound();
+      }
+
       return View(mailBox);
+    }
+
+    // GET: MailBox/Create
+    public IActionResult Create()
+    {
+      return View();
+    }
+
+    // POST: MailBox/Create
+    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+    // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("Id,Reference,Name,Color,Height,Width,Depth,ImagePath")] MailBox mailBox)
+    {
+      if (ModelState.IsValid)
+      {
+        _context.Add(mailBox);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+      }
+      return View(mailBox);
+    }
+
+    // GET: MailBox/Edit/5
+    public async Task<IActionResult> Edit(int? id)
+    {
+      if (id == null)
+      {
+        return NotFound();
+      }
+
+      var mailBox = await _context.MailBoxes.SingleOrDefaultAsync(m => m.Id == id);
+      if (mailBox == null)
+      {
+        return NotFound();
+      }
+      return View(mailBox);
+    }
+
+    // POST: MailBox/Edit/5
+    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+    // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Reference,Name,Color,Height,Width,Depth,ImagePath")] MailBox mailBox)
+    {
+      if (id != mailBox.Id)
+      {
+        return NotFound();
+      }
+
+      if (ModelState.IsValid)
+      {
+        try
+        {
+          _context.Update(mailBox);
+          await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+          if (!MailBoxExists(mailBox.Id))
+          {
+            return NotFound();
+          }
+          else
+          {
+            throw;
+          }
+        }
+        return RedirectToAction(nameof(Index));
+      }
+      return View(mailBox);
+    }
+
+    // GET: MailBox/Delete/5
+    public async Task<IActionResult> Delete(int? id)
+    {
+      if (id == null)
+      {
+        return NotFound();
+      }
+
+      var mailBox = await _context.MailBoxes
+          .SingleOrDefaultAsync(m => m.Id == id);
+      if (mailBox == null)
+      {
+        return NotFound();
+      }
+
+      return View(mailBox);
+    }
+
+    // POST: MailBox/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+      var mailBox = await _context.MailBoxes.SingleOrDefaultAsync(m => m.Id == id);
+      _context.MailBoxes.Remove(mailBox);
+      await _context.SaveChangesAsync();
+      return RedirectToAction(nameof(Index));
+    }
+
+    private bool MailBoxExists(int id)
+    {
+      return _context.MailBoxes.Any(e => e.Id == id);
     }
   }
 }

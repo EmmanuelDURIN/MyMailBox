@@ -64,7 +64,7 @@ namespace MyMailBox
         endpoints.MapControllerRoute(
             name: "discount",
             pattern: "boites-aux-lettres/{reference}",
-            defaults: new { controller = "MailBox", action = "Index" }
+            defaults: new { controller = "MailBox", action = "DetailsByReference" }
             );
         endpoints.MapControllerRoute(
                   name: "default",
