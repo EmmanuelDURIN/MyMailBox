@@ -28,7 +28,7 @@ namespace MyMailBox
       services.AddDbContext<MailBoxContext>(
         options => options.UseSqlServer(MailBoxContextFactory.ConnectionString));
       services.AddControllersWithViews();
-      services.FillDb();
+      //services.FillDb();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +45,7 @@ namespace MyMailBox
         app.UseHsts();
       }
       app.UseHttpsRedirection();
+      app.UseStatusCodePages();
       app.UseStaticFiles();
 
       app.UseRouting();
