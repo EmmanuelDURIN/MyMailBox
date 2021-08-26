@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyMailBox.Business;
 using MyMailBox.Models;
 using System.Linq;
 
@@ -6,29 +7,25 @@ namespace MyMailBox.Controllers
 {
   public class ReferenceCheckerController : Controller
   {
-    private readonly MailBoxContext _context;
+    private readonly MailBoxService mailBoxService;
 
-    public ReferenceCheckerController(MailBoxContext context)
+    public ReferenceCheckerController(MailBoxService mailBoxService)
     {
-      _context = context;
+      this.mailBoxService = mailBoxService;
     }
     public JsonResult CheckReferenceUnicity(string reference)
     {
-      if (!DoesReferenceExists(reference))
+      if (!mailBoxService.DoesReferenceExists(reference))
         return Json(true);
       else
         return Json("Reference already exists");
     }
     public JsonResult CheckReferenceExistence(string reference)
     {
-      if (DoesReferenceExists(reference))
+      if (mailBoxService.DoesReferenceExists(reference))
         return Json(true);
       else
         return Json("Reference doesn't exist");
-    }
-    private bool DoesReferenceExists(string reference)
-    {
-      return _context.MailBoxes.Any(mb => mb.Reference == reference);
     }
   }
 }
