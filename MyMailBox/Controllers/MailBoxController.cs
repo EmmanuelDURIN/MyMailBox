@@ -67,6 +67,7 @@ namespace MyMailBox.Controllers
       {
         _context.Add(mailBox);
         await _context.SaveChangesAsync();
+        TempData["message"] = "Mailbox created";
         return RedirectToAction(nameof(Index));
       }
       ProvideColorList();
@@ -133,6 +134,7 @@ namespace MyMailBox.Controllers
             throw;
           }
         }
+        TempData["message"] = "Mailbox edited";
         return RedirectToAction(nameof(Index));
       }
       ProvideColorList();
