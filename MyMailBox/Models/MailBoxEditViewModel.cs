@@ -5,14 +5,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyMailBox.Models
 {
-  public class MailBox
+  public class MailBoxEditViewModel
   {
     public int Id { get; set; }
     [Required]
     [StringLength(10)]
     [ReferenceValidation(Letter = 'X')]
-    [Remote(action: nameof(ReferenceCheckerController.CheckReferenceUnicity), controller: "ReferenceChecker")]
-    public virtual string Reference { get; set; }
+    [Remote(action: nameof(ReferenceCheckerController.CheckReferenceExistence), controller: "ReferenceChecker")]
+    public string Reference { get; set; }
     [Required]
     [StringLength(30)]
     public string Name { get; set; }

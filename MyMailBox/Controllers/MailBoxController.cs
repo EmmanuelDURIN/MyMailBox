@@ -81,7 +81,20 @@ namespace MyMailBox.Controllers
         return NotFound();
       }
 
-      var mailBox = await _context.MailBoxes.Include( m => m.Color).SingleOrDefaultAsync(m => m.Id == id);
+      MailBoxEditViewModel mailBox = await _context.MailBoxes
+        .Include(m => m.Color)
+        .Select(m => new MailBoxEditViewModel{
+          Id = m.Id,
+          Color = m.Color,
+          Name = m.Name,
+          ImagePath = m.ImagePath,
+          Reference = m.Reference,
+          Height = m.Height,
+          Depth = m.Depth,
+          Width = m.Width,
+          ColorId = m.ColorId
+        })
+        .SingleOrDefaultAsync(m => m.Id == id);
       if (mailBox == null)
       {
         return NotFound();
